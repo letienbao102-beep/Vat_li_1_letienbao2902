@@ -703,12 +703,12 @@
         <div class="space-y-2.5">
           <div class="relative">
             <span class="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-sm pointer-events-none">✉️</span>
-            <input type="email" id="input-email" class="ios-glass-input" placeholder="Tài khoản (Email)..." value="tbao2902@tnut.edu.vn" required autocomplete="username" />
+            <input type="email" id="input-email" class="ios-glass-input" placeholder="Tài khoản (Email)..." required autocomplete="username" />
           </div>
 
           <div class="relative">
             <span class="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-sm pointer-events-none">🔑</span>
-            <input type="password" id="input-matkhau" class="ios-glass-input pr-10" placeholder="Mật khẩu..." value="tbao2902" required autocomplete="current-password" />
+            <input type="password" id="input-matkhau" class="ios-glass-input pr-10" placeholder="Mật khẩu..." required autocomplete="current-password" />
             <button type="button" id="btnTogglePwd" onclick="togglePasswordVisibility()" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-cyan-300 text-xs p-1" title="Hiện / Ẩn mật khẩu">
               👁️
             </button>
@@ -2931,33 +2931,31 @@
     // 10. HỆ THỐNG BẢO MẬT ĐĂNG NHẬP FIREBASE & IPHONE LIQUID GLASS LOCK SCREEN
     // =========================================================================
     // DÁN THÔNG SỐ firebaseConfig CỦA BẠN VÀO ĐÂY (Hoặc cập nhật trực tiếp trong mục ⚙️ Cấu hình Firebase trên màn hình khóa)
-   const firebaseConfig = {
-  apiKey: "AIzaSyDKzRXbiZY_WpoOTy4QIPCfKAYay5j5yQU",
+    const defaultFirebaseConfig = {
+      apiKey: "AIzaSyDKzRXbiZY_WpoOTy4QIPCfKAYay5j5yQU",
   authDomain: "web-security-f8188.firebaseapp.com",
   projectId: "web-security-f8188",
   storageBucket: "web-security-f8188.firebasestorage.app",
   messagingSenderId: "248875747301",
   appId: "1:248875747301:web:a4bb78a19ca4255ca6110c",
   measurementId: "G-V2FTYFHGX1"
-};
-    const AUTH_SESSION_KEY = "tnut_physics1_auth_session_v1";
+    };
+
+    const AUTH_SESSION_KEY = "tnut_physics1_auth_session_v2";
     const CUSTOM_FB_CONFIG_KEY = "tnut_physics1_fb_config_v1";
-    const LOCAL_USERS_KEY = "tnut_physics1_registered_users_v1";
+    const LOCAL_USERS_KEY = "tnut_physics1_registered_users_v2";
     let firebaseAuthInstance = null;
     let firebaseModFunctions = null;
     let currentAuthMode = "login"; // 'login' | 'register' | 'forgot'
 
-    let memoryRegisteredUsers = [
-      { name: "Tác giả tbao2902 (Admin)", email: "tbao2902@tnut.edu.vn", pass: "tbao2902" },
-      { name: "Quản trị viên TNUT", email: "admin@tnut.edu.vn", pass: "tnut2026" }
-    ];
+    let memoryRegisteredUsers = [];
 
     function getRegisteredLocalUsers() {
       try {
         const raw = localStorage.getItem(LOCAL_USERS_KEY);
         if (raw) {
           const parsed = JSON.parse(raw);
-          if (Array.isArray(parsed) && parsed.length) {
+          if (Array.isArray(parsed)) {
             memoryRegisteredUsers = parsed;
             return memoryRegisteredUsers;
           }
@@ -3407,6 +3405,10 @@
       applyTheme();
       renderPracticeView();
       renderAllQrCodes();
+      try {
+        localStorage.removeItem("tnut_physics1_auth_session_v1");
+        localStorage.removeItem("tnut_physics1_registered_users_v1");
+      } catch (e) {}
       updateIosLockClock();
       setInterval(updateIosLockClock, 15000);
       initFirebaseAuthGuard();
